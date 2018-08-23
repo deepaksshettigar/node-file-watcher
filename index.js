@@ -13,8 +13,8 @@ var filewatcher = require('filewatcher');
 // the default options
 var filewatcher_opts = {
     forcePolling: true,  // try event-based watching first
-    debounce: 10,         // debounce events in non-polling mode by 10ms
-    interval: 10000,       // if we need to poll, do it every 'n' ms
+    debounce: 10,         // debounce events in non-polling mode by 'n' ms
+    interval: 60000,       // if we need to poll, do it every 'n' ms
     persistent: true      // don't end the process while files are watched
   };
    
@@ -26,7 +26,8 @@ var watcher = filewatcher(filewatcher_opts);
 // watcher.add(__filename); watch current file
 watcher.add(filename_01);
 watcher.add(filename_02);
- 
+
+var unwatched_file = "";
 watcher
 .on('change', function(file, stat) {
     console.log('File modified: %s', file);
@@ -44,7 +45,10 @@ watcher
     catch (error) {
         console.error('Error occurred in file modification:', error);
     }
-    watcher.removeAll();
+    watcher.remove(file); // Remove to avoid infinite loop
+    unwatched_file = file;
+    watcher.add(unwatched_file); // Re-add to watcher continue watching    
+    // watcher.removeAll(); // to stop infinite loop
 })
 ;
 
