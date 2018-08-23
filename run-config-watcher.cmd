@@ -1,0 +1,6 @@
+ECHO OFF
+
+SET CURRENT_DIR=%~dp0
+SET NODE_HOME=D:\Programs\node-v8.11.4-win-x64
+::ECHO %CURRENT_DIR%
+START /MIN CMD.EXE /C %NODE_HOME%\node %CURRENT_DIR%/index.js
